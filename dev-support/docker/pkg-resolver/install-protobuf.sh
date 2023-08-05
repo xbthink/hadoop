@@ -41,7 +41,7 @@ fi
 if [ "$version_to_install" == "3.7.1" ]; then
   # hadolint ignore=DL3003
   mkdir -p /opt/protobuf-src &&
-    curl -L -s -S \
+    curl -L -S \
       https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/protobuf-java-3.7.1.tar.gz \
       -o /opt/protobuf.tar.gz &&
     tar xzf /opt/protobuf.tar.gz --strip-components 1 -C /opt/protobuf-src &&

@@ -41,7 +41,7 @@ fi
 if [ "$version_to_install" == "1.72.0" ]; then
   # hadolint ignore=DL3003
   mkdir -p /opt/boost-library &&
-    curl -L https://sourceforge.net/projects/boost/files/boost/1.72.0/boost_1_72_0.tar.bz2/download >boost_1_72_0.tar.bz2 &&
+#    curl --retry 100 -0 -C - -L https://sourceforge.net/projects/boost/files/boost/1.72.0/boost_1_72_0.tar.bz2/download >boost_1_72_0.tar.bz2 &&
     mv boost_1_72_0.tar.bz2 /opt/boost-library &&
     cd /opt/boost-library &&
     tar --bzip2 -xf boost_1_72_0.tar.bz2 &&

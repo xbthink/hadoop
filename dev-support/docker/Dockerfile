@@ -17,7 +17,7 @@
 # Dockerfile for installing the necessary dependencies for building Hadoop.
 # See BUILDING.txt.
 
-FROM ubuntu:focal
+FROM ubuntu:focal@sha256:626ffe58f6e7566e00254b638eb7e0f3b11d4da9675088f4781a50ae288f3322
 
 WORKDIR /root
 
@@ -35,8 +35,9 @@ ENV DEBCONF_TERSE true
 ######
 # Platform package dependency resolver
 ######
-COPY pkg-resolver pkg-resolver
-RUN chmod a+x pkg-resolver/*.sh pkg-resolver/*.py \
+COPY pkg-resolver/*.py pkg-resolver/
+COPY pkg-resolver/*.json pkg-resolver/
+RUN chmod a+x pkg-resolver/*.py \
     && chmod a+r pkg-resolver/*.json
 
 ######
@@ -82,12 +83,21 @@ ENV HADOOP_SKIP_YETUS_VERIFICATION true
 ####
 # Install packages
 ####
-RUN pkg-resolver/install-common-pkgs.sh
-RUN pkg-resolver/install-spotbugs.sh ubuntu:focal
-RUN pkg-resolver/install-boost.sh ubuntu:focal
-RUN pkg-resolver/install-protobuf.sh ubuntu:focal
-RUN pkg-resolver/install-hadolint.sh ubuntu:focal
-RUN pkg-resolver/install-intel-isa-l.sh ubuntu:focal
+COPY pkg-resolver/install-common-pkgs.sh pkg-resolver/
+RUN bash pkg-resolver/install-common-pkgs.sh
+COPY pkg-resolver/install-spotbugs.sh pkg-resolver/
+RUN bash pkg-resolver/install-spotbugs.sh ubuntu:focal
+COPY pkg-resolver/install-boost.sh pkg-resolver/
+
+
+COPY boost_1_72_0.tar.bz2 boost_1_72_0.tar.bz2
+RUN bash pkg-resolver/install-boost.sh ubuntu:focal
+COPY pkg-resolver/install-protobuf.sh pkg-resolver/
+RUN bash pkg-resolver/install-protobuf.sh ubuntu:focal
+COPY pkg-resolver/install-hadolint.sh pkg-resolver/
+RUN bash pkg-resolver/install-hadolint.sh ubuntu:focal
+COPY pkg-resolver/install-intel-isa-l.sh pkg-resolver/
+RUN bash pkg-resolver/install-intel-isa-l.sh ubuntu:focal
 
 ###
 # Everything past this point is either not needed for testing or breaks Yetus.
